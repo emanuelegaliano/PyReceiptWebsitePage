@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./pyreceipt-bot-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PyReceipt — Fast, Lightweight Receipt OCR & Telegram Expense Assistant</title>
+    <meta name="description" content="Autonomous expense tracking and lightweight OCR ingestion for Telegram & Terminal. Built with Python 3.12, Tesseract/RapidOCR, and SQLite." />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#FAFBFC] text-slate-900 min-h-screen flex flex-col font-sans selection:bg-blue-100 selection:text-blue-700">
+
+    <!-- Top Subtle Ambient Glow -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-blue-100/50 via-emerald-50/30 to-transparent blur-3xl pointer-events-none -z-10"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-slate-200/80 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3 shrink-0 group">
+          <div class="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-emerald-400 text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
+            <!-- Document + Receipt Icon -->
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M8 13h4" />
+              <path d="M8 17h6" />
+            </svg>
+            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+              <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900">
+              PyReceipt
+            </span>
+            <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
+              Ecosystem
+            </span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links (Hidden on < lg to prevent overflow) -->
+        <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-slate-600 shrink-0">
+          <a href="#features" class="hover:text-blue-600 transition-colors whitespace-nowrap">Features</a>
+          <a href="#how-it-works" class="hover:text-blue-600 transition-colors whitespace-nowrap">How It Works</a>
+          <a href="#repos" class="hover:text-blue-600 transition-colors whitespace-nowrap">GitHub Repos</a>
+          <a href="#explore" class="hover:text-blue-600 transition-colors whitespace-nowrap">Technologies</a>
+        </nav>
+
+        <!-- Header CTA Buttons (Responsive) -->
+        <div class="hidden sm:flex items-center gap-2.5 shrink-0">
+          <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition-all whitespace-nowrap">
+            <i data-lucide="github" class="w-3.5 h-3.5"></i>
+            <span>PyReceipt</span>
+            <span class="text-[10px] font-mono text-slate-500 font-bold">v0.1.0</span>
+          </a>
+          <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/30 hover:shadow-md hover:shadow-blue-600/40 transition-all whitespace-nowrap">
+            <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+            <span>Chatbot</span>
+            <span class="text-[10px] font-mono bg-blue-500/90 text-white px-1.5 py-0.2 rounded font-bold">v0.1.0</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button (Visible on < lg) -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none shrink-0" aria-label="Toggle Menu">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-lg">
+        <a href="#features" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">Features</a>
+        <a href="#how-it-works" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">How It Works</a>
+        <a href="#repos" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">GitHub Repos</a>
+        <a href="#explore" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">Technologies</a>
+        <div class="pt-4 flex flex-col sm:hidden gap-2">
+          <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-800">PyReceipt Repo (v0.1.0)</a>
+          <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-semibold bg-blue-600 text-white">PyReceiptChatbot Repo (v0.1.0)</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+
+      <!-- ======================================================== -->
+      <!-- Hero Section -->
+      <!-- ======================================================== -->
+      <section class="relative pt-10 pb-20 md:pt-16 md:pb-28 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs sm:text-sm font-semibold mb-6 shadow-sm">
+              <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Fast OCR & Autonomous Telegram Expense Assistant</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-6">
+              From Paper Receipts to <br class="hidden sm:inline" />
+              <span class="bg-gradient-to-r from-blue-600 via-emerald-600 to-amber-500 bg-clip-text text-transparent">
+                Smart Financial Insights.
+              </span>
+              Instantly.
+            </h1>
+
+            <!-- Sub-headline -->
+            <p class="text-lg sm:text-xl text-slate-600 max-w-2xl font-normal leading-relaxed mb-10">
+              Leverage intelligent OCR (Tesseract & RapidOCR) and an autonomous Telegram chatbot to digitize, categorize, and query your expenses effortlessly.
+            </p>
+
+            <!-- Primary CTAs -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center mb-16">
+              <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer"
+                 class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:-translate-y-0.5 transition-all">
+                <i data-lucide="github" class="w-5 h-5"></i>
+                <span>Get Started on GitHub</span>
+              </a>
+              <a href="https://emanuelegaliano.github.io/PyReceipt/" target="_blank" rel="noopener noreferrer"
+                 class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300/90 shadow-sm hover:shadow-md hover:border-slate-400 hover:-translate-y-0.5 transition-all">
+                <i data-lucide="book-open" class="w-5 h-5 text-slate-500"></i>
+                <span>View Documentation</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Hero Central Illustrative Graphic: Paper Receipt Transformation & Telegram Ingestion -->
+          <div class="relative max-w-5xl mx-auto">
+            <!-- Background glow behind card -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-emerald-500/20 to-amber-400/20 rounded-3xl blur-2xl opacity-60"></div>
+            
+            <div class="relative bg-white rounded-2xl md:rounded-3xl border border-slate-200/90 shadow-2xl p-4 sm:p-8 lg:p-10 overflow-hidden bg-dot-pattern">
+              
+              <!-- Top Mockup Window Chrome with macOS Dots -->
+              <div class="flex items-center justify-between pb-6 border-b border-slate-100 mb-8">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                  <span class="ml-2 text-xs font-mono text-slate-500 font-semibold truncate">PyReceipt Ecosystem // Telegram Ingestion & OCR Pipeline</span>
+                </div>
+                <div class="hidden sm:flex items-center gap-3 text-xs font-medium text-slate-500">
+                  <span class="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 font-semibold">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> OCR Engines Ready
+                  </span>
+                  <span class="inline-flex items-center gap-1 text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60 font-semibold">
+                    <i data-lucide="bot" class="w-3.5 h-3.5"></i> Telegram Bot Active
+                  </span>
+                </div>
+              </div>
+
+              <!-- Main Transformation Visual Grid -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left: Physical Receipt Simulation with Scanning Beam -->
+                <div class="lg:col-span-4 relative group">
+                  <div class="relative bg-white border border-slate-300 rounded-xl shadow-lg p-5 font-mono text-xs text-slate-700 rotate-[-1.5deg] hover:rotate-0 transition-transform duration-300 overflow-hidden">
+                    <!-- Laser Scan Line -->
+                    <div class="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_12px_#3b82f6] animate-scan pointer-events-none z-20"></div>
+                    
+                    <!-- Receipt Content -->
+                    <div class="text-center pb-3 border-b border-dashed border-slate-300">
+                      <div class="font-bold tracking-wider text-slate-900 text-sm">MOD PIZZA</div>
+                      <div class="text-[11px] text-slate-500">26902 92nd Ave NW • Stanwood, WA</div>
+                      <div class="text-[10px] text-slate-400 mt-1">2026-08-25 18:18:00</div>
+                    </div>
+
+                    <div class="py-3 space-y-2 text-[11px] border-b border-dashed border-slate-300">
+                      <div class="flex justify-between items-center">
+                        <span>Draft Beer (2 @ 4.97)</span>
+                        <span class="font-semibold text-slate-900">$9.94</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>Fountain Drink (16oz)</span>
+                        <span class="font-semibold text-slate-900">$2.17</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>MOD Pizza</span>
+                        <span class="font-semibold text-slate-900">$8.67</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>Mini MOD</span>
+                        <span class="font-semibold text-slate-900">$6.67</span>
+                      </div>
+                    </div>
+
+                    <div class="pt-3 space-y-1 text-[11px]">
+                      <div class="flex justify-between text-slate-500">
+                        <span>Sub Total:</span>
+                        <span>$27.45</span>
+                      </div>
+                      <div class="flex justify-between text-slate-500">
+                        <span>Sales Tax:</span>
+                        <span>$2.53</span>
+                      </div>
+                      <div class="flex justify-between font-bold text-slate-900 text-sm pt-1 border-t border-slate-200">
+                        <span>ORDER TOTAL:</span>
+                        <span class="text-blue-600">€29.98</span>
+                      </div>
+                    </div>
+
+                    <!-- Barcode simulation -->
+                    <div class="mt-4 pt-3 border-t border-slate-200 flex flex-col items-center">
+                      <div class="h-6 w-36 bg-slate-900 flex justify-between px-1 py-0.5">
+                        <div class="w-1 bg-white h-full"></div>
+                        <div class="w-2 bg-white h-full"></div>
+                        <div class="w-0.5 bg-white h-full"></div>
+                        <div class="w-1.5 bg-white h-full"></div>
+                        <div class="w-1 bg-white h-full"></div>
+                        <div class="w-3 bg-white h-full"></div>
+                      </div>
+                      <span class="text-[9px] text-slate-400 mt-1 tracking-widest">||| 987410293847 |||</span>
+                    </div>
+
+                    <!-- OCR Detection Tag Overlay -->
+                    <div class="absolute top-2 right-2 px-2 py-0.5 bg-emerald-500/90 text-white rounded text-[10px] font-semibold tracking-wider flex items-center gap-1 shadow-sm">
+                      <i data-lucide="scan" class="w-3 h-3"></i> RAPID / TESSERACT OCR
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Center: Transformation Stream to SQLite & Telegram -->
+                <div class="lg:col-span-3 flex flex-col items-center justify-center py-2 lg:py-0">
+                  <div class="flex flex-col items-center gap-3 w-full">
+                    
+                    <!-- Transformation Icon Center -->
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 animate-pulse">
+                      <i data-lucide="cpu" class="w-6 h-6"></i>
+                    </div>
+                    
+                    <span class="text-xs font-semibold text-slate-700 uppercase tracking-wider text-center">Fast Parsing & SQLite Storage</span>
+                    
+                    <!-- Flow Chips -->
+                    <div class="space-y-2 w-full max-w-xs text-xs">
+                      <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200/80 text-blue-800 font-medium">
+                        <span class="flex items-center gap-1.5"><i data-lucide="store" class="w-3.5 h-3.5 text-blue-600"></i> Merchant</span>
+                        <span class="font-semibold">MOD Pizza</span>
+                      </div>
+                      <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 font-medium">
+                        <span class="flex items-center gap-1.5"><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-slate-600"></i> Amount</span>
+                        <span class="font-mono font-bold">€29.98</span>
+                      </div>
+                      <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200/80 text-amber-800 font-medium">
+                        <span class="flex items-center gap-1.5"><i data-lucide="tag" class="w-3.5 h-3.5 text-amber-600"></i> Category</span>
+                        <span class="font-semibold">RESTAURANT</span>
+                      </div>
+                      <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-800 font-medium">
+                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-600"></i> Date</span>
+                        <span class="font-mono font-semibold">2026-08-25</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Real Telegram Chatbot Workflow -->
+                <div class="lg:col-span-5 flex flex-col gap-3">
+                  <div class="bg-[#F0F5F2] border border-emerald-200/80 rounded-2xl p-4 shadow-sm relative">
+                    
+                    <!-- Chat Header -->
+                    <div class="flex items-center justify-between pb-3 border-b border-emerald-200/60 mb-3">
+                      <div class="flex items-center gap-2.5">
+                        <img src="./pyreceipt-bot-icon.png" alt="PyReceipt Bot Avatar" class="w-8 h-8 rounded-lg shadow-sm border border-white" />
+                        <div>
+                          <div class="text-xs font-bold text-slate-900">PyReceipt Bot</div>
+                          <div class="text-[10px] text-emerald-700 font-medium flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online • Telegram Bot API
+                          </div>
+                        </div>
+                      </div>
+                      <span class="text-[10px] bg-white border border-emerald-300 text-emerald-800 px-2 py-0.5 rounded font-mono font-semibold">SQLite / QIF</span>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="space-y-3 text-xs">
+                      <!-- User Message: Photo + /receipt -->
+                      <div class="flex justify-end">
+                        <div class="bg-blue-600 text-white px-3 py-1.5 rounded-xl rounded-tr-sm shadow-sm flex items-center gap-1.5 text-[11px]">
+                          <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                          <span>[Sent receipt photo]</span>
+                        </div>
+                      </div>
+
+                      <!-- Bot Response: Real PyReceipt Bot Message -->
+                      <div class="flex justify-start">
+                        <div class="bg-white border border-slate-200 text-slate-800 px-3.5 py-3 rounded-2xl rounded-tl-sm max-w-[98%] shadow-sm space-y-2 text-[11px]">
+                          <div class="flex items-center gap-1.5 text-emerald-700 font-bold">
+                            <span>✅ Expense recorded successfully!</span>
+                          </div>
+                          
+                          <div class="space-y-1 font-mono text-[11px] text-slate-700">
+                            <div>🏢 <strong>Merchant:</strong> MOD Pizza</div>
+                            <div>💶 <strong>Amount:</strong> €29.98</div>
+                            <div>🏷️ <strong>Category:</strong> RESTAURANT</div>
+                            <div>📅 <strong>Date:</strong> 2026-08-25</div>
+                          </div>
+
+                          <!-- QIF Snippet -->
+                          <div class="p-2 rounded bg-slate-50 border border-slate-200 font-mono text-[10px] text-slate-600">
+                            <div class="text-[9px] font-bold text-slate-400 mb-1">📄 QIF Format:</div>
+                            <code>!Type:Cash<br/>D25/08/2026<br/>T-29.98<br/>PMOD Pizza<br/>LRESTAURANT<br/>^</code>
+                          </div>
+
+                          <!-- Inline Buttons -->
+                          <div class="pt-2 grid grid-cols-2 gap-1.5">
+                            <div class="text-center py-1 bg-emerald-50 text-emerald-800 font-semibold rounded text-[10px] border border-emerald-200">
+                              📊 /stats summary
+                            </div>
+                            <div class="text-center py-1 bg-slate-100 text-slate-700 font-semibold rounded text-[10px] border border-slate-200">
+                              ✍️ Manual Entry
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- Features Section (Bento Grid) -->
+      <!-- ======================================================== -->
+      <section id="features" class="py-20 bg-slate-50/60 border-y border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <!-- Section Header -->
+          <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200/60 px-3 py-1 rounded-full">
+              Engine Capabilities
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
+              Everything You Need to Track Receipts Effortlessly
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600">
+              Designed as a lightweight, low-resource ecosystem: fast OCR parsing coupled with an autonomous Telegram bot and SQLite database.
+            </p>
+          </div>
+
+          <!-- Bento Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card 1: OCR Parsing (Large Spanning Card) -->
+            <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/90 p-8 shadow-card hover:shadow-soft-md transition-all group">
+              <div class="flex items-start justify-between mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                  <i data-lucide="scan-text" class="w-6 h-6"></i>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70">
+                    PyReceipt v0.1.0
+                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                    Tesseract & RapidOCR
+                  </span>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">OCR Parsing & Fast Field Extraction</h3>
+              <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                Extracts crucial transaction fields including Date, Merchant / Vendor name, Itemized lines, and Totals from photos, scans, and PDFs with optimized image preprocessing filters.
+              </p>
+
+              <!-- Mini Structured Table UI Preview -->
+              <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 font-mono text-xs overflow-x-auto">
+                <table class="w-full text-left">
+                  <thead>
+                    <tr class="text-slate-400 border-b border-slate-200 pb-2">
+                      <th class="pb-2 font-medium">PARSED FIELD</th>
+                      <th class="pb-2 font-medium">EXTRACTED VALUE</th>
+                      <th class="pb-2 font-medium">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200/60 text-slate-700">
+                    <tr>
+                      <td class="py-2 font-semibold text-slate-900">Merchant</td>
+                      <td class="py-2 font-sans">MOD Pizza</td>
+                      <td class="py-2 text-emerald-600 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Extracted</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-semibold text-slate-900">Date</td>
+                      <td class="py-2">2026-08-25</td>
+                      <td class="py-2 text-emerald-600 font-semibold">Normalized ISO</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-semibold text-slate-900">Total Amount</td>
+                      <td class="py-2 font-bold text-blue-600">€29.98</td>
+                      <td class="py-2 text-emerald-600 font-semibold">Validated</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-semibold text-slate-900">Category</td>
+                      <td class="py-2 font-bold text-amber-600">RESTAURANT</td>
+                      <td class="py-2 text-emerald-600 font-semibold">Auto-Assigned</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Card 2: Telegram Chatbot -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-8 shadow-card hover:shadow-soft-md transition-all group flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-6">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                    <i data-lucide="message-square-text" class="w-6 h-6"></i>
+                  </div>
+                  <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                    PyReceiptChatbot v0.1.0
+                  </span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Telegram Bot Assistant</h3>
+                <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                  Autonomous assistant for Telegram. Send receipts via photo, use <code>/add</code> for manual entries, and control your expenses with interactive inline keyboards.
+                </p>
+              </div>
+
+              <!-- Interactive Mock Prompt Chips -->
+              <div class="space-y-2 pt-2 font-mono">
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-center gap-2 hover:bg-slate-100 transition-colors">
+                  <span class="text-blue-600 font-bold">/add</span>
+                  <span>15.50 Pizzeria Da Michele RESTAURANT</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-center gap-2 hover:bg-slate-100 transition-colors">
+                  <span class="text-emerald-600 font-bold">/stats</span>
+                  <span>2026-08 (View monthly summary)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Smart Categorization & QIF Export -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-8 shadow-card hover:shadow-soft-md transition-all group">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform mb-6">
+                <i data-lucide="tag" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">Smart Categorization & QIF Export</h3>
+              <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                Classify expenses into clean categories (GROCERIES, RESTAURANT, UTILITIES) and export directly into <strong>QIF format</strong> for GnuCash, HomeBank, and Excel.
+              </p>
+
+              <!-- Category Splits Graphic -->
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> RESTAURANT</span>
+                    <span>€29.98</span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 55%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> GROCERIES</span>
+                    <span>€55.75</span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="bg-emerald-500 h-2 rounded-full" style="width: 80%"></div>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <div class="flex items-center justify-between text-xs font-mono bg-slate-50 border border-slate-200 p-2 rounded-lg text-slate-600">
+                    <span>QIF Format Support</span>
+                    <span class="text-emerald-600 font-bold">Enabled (/qifon)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Spending Analytics & Metrics (Marked as in Roadmap / Development) -->
+            <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/90 p-8 shadow-card hover:shadow-soft-md transition-all group relative overflow-hidden">
+              
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
+                    <i data-lucide="trending-up" class="w-6 h-6"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-xl font-bold text-slate-900">Spending Analytics & Metrics</h3>
+                      <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-300">
+                        Roadmap • In Active Development
+                      </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                      Basic monthly stats are available via <code>/stats</code>. Advanced visual charts, multi-month analytics & velocity reports will be released soon.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stat Counters & Notice Banner -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <div class="text-xs text-slate-500 font-medium mb-1">Current Feature</div>
+                  <div class="text-xl font-bold text-slate-900">/stats & /month</div>
+                  <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i> Active in Bot
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <div class="text-xs text-slate-500 font-medium mb-1">Database Engine</div>
+                  <div class="text-xl font-bold text-slate-900">SQLite Local</div>
+                  <div class="text-[11px] text-blue-600 font-semibold flex items-center gap-1 mt-1">
+                    <i data-lucide="database" class="w-3.5 h-3.5"></i> Offline & Private
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <div class="text-xs text-slate-500 font-medium mb-1">Visual Dashboards</div>
+                  <div class="text-xl font-bold text-amber-700">Planned</div>
+                  <div class="text-[11px] text-amber-600 font-semibold flex items-center gap-1 mt-1">
+                    <i data-lucide="clock" class="w-3.5 h-3.5"></i> In Roadmap
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs text-amber-800 flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                <span><strong>Developer Note:</strong> Full visual graphing and extended reporting modules are currently under active development in the PyReceipt roadmap.</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- How It Works Section (Alternating Left-Right List with macOS Window Chrome) -->
+      <!-- ======================================================== -->
+      <section id="how-it-works" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <!-- Section Header -->
+          <div class="text-center max-w-3xl mx-auto mb-20">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
+              Live Showcase
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
+              How PyReceipt Works in Action
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600">
+              Explore the real Telegram interface, OCR pipeline, manual entry wizards, and statistical breakdown features.
+            </p>
+          </div>
+
+          <!-- Alternating Showcase List -->
+          <div class="space-y-28">
+
+            <!-- Item 1: Start Menu / Command Center (Text Left, Image Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <div class="lg:col-span-6 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
+                  <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[11px] font-bold">1</span>
+                  <span>Command Center & Onboarding</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Instant Telegram Bot Onboarding
+                </h3>
+                <p class="text-slate-600 leading-relaxed text-base">
+                  Launch the assistant with <code>/start</code> to access immediate interactive shortcuts. Everything is operated through clean Telegram commands and inline reply keyboards.
+                </p>
+                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Instant command shortcuts for <strong>Manual Entry</strong>, <strong>Monthly Stats</strong>, and <strong>OCR Language</strong>.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Toggle QIF file format export on/off anytime with <code>/qifon</code> and <code>/qifoff</code>.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Quick cancellation of pending actions with <code>/cancel</code>.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Image on RIGHT: on hover scales up and rotates to LEFT (-rotate-2) -->
+              <div class="lg:col-span-6 flex justify-center">
+                <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(37,99,235,0.25)] transition-all duration-500 ease-out transform hover:scale-105 hover:-rotate-2 cursor-pointer">
+                  <!-- macOS Window Frame (Light Theme) -->
+                  <div class="h-9 bg-slate-100/90 border-b border-slate-200 flex items-center px-4 gap-2 select-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                    </div>
+                    <div class="mx-auto text-[11px] font-medium text-slate-500 font-mono tracking-tight">Telegram // /start</div>
+                  </div>
+                  <img src="./assets/start.png" alt="Telegram Bot /start command and keyboard" class="w-full h-auto block" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 2: Receipt OCR Ingestion (Image Left, Text Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <!-- Image on LEFT: on hover scales up and rotates to RIGHT (rotate-2) -->
+              <div class="lg:col-span-6 flex justify-center order-2 lg:order-1">
+                <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.25)] transition-all duration-500 ease-out transform hover:scale-105 hover:rotate-2 cursor-pointer">
+                  <!-- macOS Window Frame (Light Theme) -->
+                  <div class="h-9 bg-slate-100/90 border-b border-slate-200 flex items-center px-4 gap-2 select-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                    </div>
+                    <div class="mx-auto text-[11px] font-medium text-slate-500 font-mono tracking-tight">ExpressExpense // Receipt OCR</div>
+                  </div>
+                  <img src="./assets/receipt.png" alt="Receipt OCR extraction in Telegram (ExpressExpense Dataset)" class="w-full h-auto block" />
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-5 order-1 lg:order-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                  <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[11px] font-bold">2</span>
+                  <span>Automatic OCR Ingestion</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Snap a Photo & Extract Merchant, Amount and Date
+                </h3>
+                <p class="text-slate-600 leading-relaxed text-base">
+                  Simply send any receipt image directly to the Telegram bot. PyReceipt utilizes Tesseract and RapidOCR to parse the receipt, classify the merchant, extract totals, and format the record.
+                </p>
+                
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center gap-2.5">
+                  <i data-lucide="file-text" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                  <span>Sample receipt illustrated above is sourced from the <strong>ExpressExpense</strong> dataset.</span>
+                </div>
+
+                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Automatic identification of Merchant (e.g. <em>MOD Pizza</em>), Amount (€29.98), Category (<em>RESTAURANT</em>), and Date.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Automatic generation of <strong>QIF text blocks</strong> ready for financial software imports (GnuCash, HomeBank).</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Low-resource execution: runs effortlessly on lightweight local hardware and Raspberry Pi.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Item 3: Manual Entry & Wizard (Text Left, Image Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <div class="lg:col-span-6 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+                  <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[11px] font-bold">3</span>
+                  <span>Guided Manual Entry</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Fast Manual Commands & Confirmation Wizard
+                </h3>
+                <p class="text-slate-600 leading-relaxed text-base">
+                  When you have a cash transaction or quick receipt without a picture, log it in one line with <code>/add 28 Fresh Pizza NYC RESTAURANT</code> or step-by-step with <code>/manual</code>.
+                </p>
+                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Fast one-line input syntax: <code>/add &lt;amount&gt; &lt;merchant&gt; &lt;category&gt;</code></span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Interactive confirmation buttons to edit Amount, Category, or Merchant before saving.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Instant SQLite storage with atomic transaction safety.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Image on RIGHT: on hover scales up and rotates to LEFT (-rotate-2) -->
+              <div class="lg:col-span-6 flex justify-center">
+                <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(245,158,11,0.25)] transition-all duration-500 ease-out transform hover:scale-105 hover:-rotate-2 cursor-pointer">
+                  <!-- macOS Window Frame (Light Theme) -->
+                  <div class="h-9 bg-slate-100/90 border-b border-slate-200 flex items-center px-4 gap-2 select-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                    </div>
+                    <div class="mx-auto text-[11px] font-medium text-slate-500 font-mono tracking-tight">Telegram // /add wizard</div>
+                  </div>
+                  <img src="./assets/manual.png" alt="Manual expense entry with confirmation buttons" class="w-full h-auto block" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 4: Expense Summaries & Stats (Image Left, Text Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <!-- Image on LEFT: on hover scales up and rotates to RIGHT (rotate-2) -->
+              <div class="lg:col-span-6 flex justify-center order-2 lg:order-1">
+                <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(99,102,241,0.25)] transition-all duration-500 ease-out transform hover:scale-105 hover:rotate-2 cursor-pointer">
+                  <!-- macOS Window Frame (Light Theme) -->
+                  <div class="h-9 bg-slate-100/90 border-b border-slate-200 flex items-center px-4 gap-2 select-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                    </div>
+                    <div class="mx-auto text-[11px] font-medium text-slate-500 font-mono tracking-tight">Telegram // /stats</div>
+                  </div>
+                  <img src="./assets/stats.png" alt="Expense summary and category breakdown" class="w-full h-auto block" />
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-5 order-1 lg:order-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
+                  <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[11px] font-bold">4</span>
+                  <span>Expense Summaries & Statistics</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Real-Time Monthly & All-Time Summaries
+                </h3>
+                <p class="text-slate-600 leading-relaxed text-base">
+                  Stay in control of your financial spending with simple statistical commands. View monthly totals and category breakdowns anytime.
+                </p>
+                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Run <code>/stats</code> or <code>/month</code> to view current month expense metrics.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Query historical periods using <code>/stats YYYY-MM</code> (e.g. <code>/stats 2019-06</code>) or <code>/stats all</code>.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Clear category-level totals (GROCERIES, RESTAURANT, TRANSPORT).</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Item 5: Multi-Language OCR Configuration (Text Left, Image Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <div class="lg:col-span-6 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                  <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[11px] font-bold">5</span>
+                  <span>Multi-Language Configuration</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Dynamic OCR Language Switching (IT / EN)
+                </h3>
+                <p class="text-slate-600 leading-relaxed text-base">
+                  Switch the active OCR parser language on the fly using the <code>/lang</code> command to maximize optical accuracy across Italian and English receipts.
+                </p>
+                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Support for 🇮🇹 <strong>Italiano</strong> and 🇬🇧 <strong>English</strong> receipt structures.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Interactive inline buttons to toggle language immediately without restarting the bot.</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span>Adapts date formats and keyword parsing to the chosen locale.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Image on RIGHT: on hover scales up and rotates to LEFT (-rotate-2) -->
+              <div class="lg:col-span-6 flex justify-center">
+                <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.25)] transition-all duration-500 ease-out transform hover:scale-105 hover:-rotate-2 cursor-pointer">
+                  <!-- macOS Window Frame (Light Theme) -->
+                  <div class="h-9 bg-slate-100/90 border-b border-slate-200 flex items-center px-4 gap-2 select-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50"></span>
+                    </div>
+                    <div class="mx-auto text-[11px] font-medium text-slate-500 font-mono tracking-tight">Telegram // /lang switcher</div>
+                  </div>
+                  <img src="./assets/lang.png" alt="Multi-language OCR selection dialog" class="w-full h-auto block" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- GitHub Repositories & Ecosystem Section -->
+      <!-- ======================================================== -->
+      <section id="repos" class="py-20 bg-slate-50/80 border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200/60 px-3 py-1 rounded-full">
+              Open Source Repositories
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
+              Explore the PyReceipt Ecosystem
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600">
+              Two modular repositories working in synergy to provide OCR extraction and conversational expense management.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            
+            <!-- Repository 1: PyReceipt -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft-lg hover:border-blue-300 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                      <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">PyReceipt</h3>
+                        <span class="text-[11px] font-mono font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">v0.1.0</span>
+                      </div>
+                      <p class="text-xs text-slate-500">Core OCR & Extraction Engine</p>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                  Lightweight receipt processing and OCR application designed for low-resource environments (e.g., Raspberry Pi, home servers).
+                </p>
+
+                <div class="space-y-2 mb-6 text-xs text-slate-600">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Tesseract OCR & RapidOCR integration</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Advanced image filtering & receipt edge cropping</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Low memory footprint & zero cloud dependency</span>
+                  </div>
+                </div>
+              </div>
+
+              <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-slate-800 bg-slate-100 hover:bg-blue-600 hover:text-white border border-slate-200/80 transition-all">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                <span>Explore PyReceipt Repo</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+
+            <!-- Repository 2: PyReceiptChatbot -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft-lg hover:border-emerald-300 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                      <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">PyReceiptChatbot</h3>
+                        <span class="text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">v0.1.0</span>
+                      </div>
+                      <p class="text-xs text-slate-500">Autonomous Telegram & CLI Assistant</p>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                  Autonomous Expense Tracking & Receipt OCR Assistant for Telegram and Terminal. Powered by SQLite and python-telegram-bot.
+                </p>
+
+                <div class="space-y-2 mb-6 text-xs text-slate-600">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Photo OCR parsing + fast <code>/add</code> manual wizard</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Monthly statistics and QIF format export</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Multi-language OCR switcher (Italiano / English)</span>
+                  </div>
+                </div>
+              </div>
+
+              <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-slate-800 bg-slate-100 hover:bg-emerald-600 hover:text-white border border-slate-200/80 transition-all">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                <span>Explore PyReceiptChatbot Repo</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Creator Callout Card (At the bottom of Repositories) -->
+          <div class="max-w-5xl mx-auto mt-12 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4 text-center sm:text-left">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0">
+                EG
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-bold text-slate-900">Created by Emanuele Galiano</h4>
+                <p class="text-xs sm:text-sm text-slate-500">Creator & maintainer of the open-source PyReceipt ecosystem.</p>
+              </div>
+            </div>
+            <a href="https://emanuelegaliano.github.io/portfolio/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-xs sm:text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-all shrink-0">
+              <span>Visit Creator Portfolio</span>
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- Explore / Technology Stack Banner -->
+      <!-- ======================================================== -->
+      <section id="explore" class="py-16 bg-white border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-8">
+            Engineered with Modern Open-Source Technologies
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-80 hover:opacity-100 transition-all duration-300">
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="terminal" class="w-5 h-5 text-blue-600"></i>
+              <span>Python 3.12</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="scan-line" class="w-5 h-5 text-emerald-600"></i>
+              <span>Tesseract OCR</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+              <span>RapidOCR</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="database" class="w-5 h-5 text-indigo-600"></i>
+              <span>SQLite</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="bot" class="w-5 h-5 text-blue-500"></i>
+              <span>python-telegram-bot</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="file-text" class="w-5 h-5 text-slate-600"></i>
+              <span>QIF Export</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+              <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+              <span>MIT License</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- Footer -->
+    <!-- ======================================================== -->
+    <footer class="bg-slate-50 border-t border-slate-200 py-12 text-slate-600 text-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          
+          <!-- Col 1: Brand & Bio -->
+          <div class="md:col-span-2 space-y-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+              </div>
+              <span class="text-lg font-bold text-slate-900">PyReceipt</span>
+            </div>
+            <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
+              Lightweight receipt processing and autonomous Telegram expense assistant designed for privacy and low-resource environments.
+            </p>
+            <div class="flex items-center gap-4 pt-1">
+              <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" class="text-slate-400 hover:text-slate-900 transition-colors" title="GitHub Repository">
+                <i data-lucide="github" class="w-5 h-5"></i>
+              </a>
+              <a href="https://emanuelegaliano.github.io/portfolio/" target="_blank" class="text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1">
+                <span>Created by Emanuele Galiano</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Col 2: Navigation Links -->
+          <div>
+            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Navigation</h4>
+            <ul class="space-y-2 text-xs">
+              <li><a href="#features" class="hover:text-blue-600 transition-colors">Features</a></li>
+              <li><a href="#how-it-works" class="hover:text-blue-600 transition-colors">How It Works (Showcase)</a></li>
+              <li><a href="#repos" class="hover:text-blue-600 transition-colors">GitHub Repositories</a></li>
+              <li><a href="#explore" class="hover:text-blue-600 transition-colors">Open Source Tech</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Repositories & Version Info -->
+          <div>
+            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Repositories & Versions</h4>
+            <ul class="space-y-2 text-xs">
+              <li>
+                <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
+                  <span>PyReceipt</span>
+                  <span class="text-[10px] font-mono font-bold text-blue-600">v0.1.0</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
+                  <span>PyReceiptChatbot</span>
+                  <span class="text-[10px] font-mono font-bold text-emerald-600">v0.1.0</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://emanuelegaliano.github.io/PyReceipt/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1 font-medium text-slate-700">
+                  <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-500"></i>
+                  <span>Official Documentation</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://emanuelegaliano.github.io/portfolio/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
+                  <span>Author Portfolio</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Bottom Copyright Line -->
+        <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <p>© 2026 PyReceipt Ecosystem by <a href="https://emanuelegaliano.github.io/portfolio/" target="_blank" class="font-semibold text-slate-700 hover:text-blue-600">Emanuele Galiano</a>. Open-source under MIT License.</p>
+          <p class="flex items-center gap-1 text-slate-400">
+            Light SaaS Design • Built with Vite & Tailwind CSS
+          </p>
+        </div>
+
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

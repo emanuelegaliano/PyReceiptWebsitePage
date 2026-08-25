@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Robot Surface Gradient -->
+    <linearGradient id="botGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    <!-- Screen Visor Gradient -->
+    <linearGradient id="visorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <!-- Mint Emerald Accent -->
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <!-- Shadow Filter -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0f172a" flood-opacity="0.25" />
+    </filter>
+
+    <!-- Eye Glow -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle / Rounded Avatar Base (Perfect for Telegram) -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+
+  <!-- Subtle Ambient Glow Rings -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2" />
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="2" />
+
+  <!-- Main Bot Container Group with Shadow -->
+  <g filter="url(#dropShadow)">
+    
+    <!-- Antenna / Scanner Node -->
+    <rect x="246" y="86" width="20" height="42" rx="10" fill="#e2e8f0" />
+    <circle cx="256" cy="80" r="18" fill="url(#mintGrad)" filter="url(#glow)" />
+    <circle cx="256" cy="80" r="8" fill="#ffffff" />
+
+    <!-- Robot Head Surface -->
+    <rect x="116" y="122" width="280" height="228" rx="56" fill="url(#botGrad)" stroke="#cbd5e1" stroke-width="4" />
+
+    <!-- Ears / Headphone Mounts -->
+    <rect x="94" y="196" width="24" height="80" rx="12" fill="#94a3b8" />
+    <rect x="98" y="210" width="16" height="52" rx="8" fill="url(#mintGrad)" />
+    
+    <rect x="394" y="196" width="24" height="80" rx="12" fill="#94a3b8" />
+    <rect x="398" y="210" width="16" height="52" rx="8" fill="url(#mintGrad)" />
+
+    <!-- Dark High-Tech Visor / Display Screen -->
+    <rect x="146" y="152" width="220" height="124" rx="34" fill="url(#visorGrad)" stroke="#334155" stroke-width="2" />
+
+    <!-- Visor Glass Glare Reflection -->
+    <path d="M 160 166 Q 220 156, 330 166 Q 300 178, 160 178 Z" fill="#ffffff" fill-opacity="0.12" />
+
+    <!-- Glowing Robotic Eyes (Friendly Modern Rounded Visor Eyes) -->
+    <rect x="180" y="184" width="46" height="60" rx="23" fill="url(#mintGrad)" filter="url(#glow)" />
+    <circle cx="196" cy="198" r="6" fill="#ffffff" />
+
+    <rect x="286" y="184" width="46" height="60" rx="23" fill="url(#mintGrad)" filter="url(#glow)" />
+    <circle cx="302" cy="198" r="6" fill="#ffffff" />
+
+    <!-- Embedded Stylized Receipt Badge on Chest / Mouth Plate -->
+    <g transform="translate(196, 290)">
+      <!-- Receipt Shape -->
+      <path d="M 0 0 L 120 0 L 120 48 L 105 40 L 90 48 L 75 40 L 60 48 L 45 40 L 30 48 L 15 40 L 0 48 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+      
+      <!-- Receipt Lines -->
+      <line x1="16" y1="12" x2="104" y2="12" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" />
+      <line x1="16" y1="22" x2="74" y2="22" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+      <line x1="16" y1="30" x2="52" y2="30" stroke="#10b981" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+  </g>
+
+  <!-- Online Verified Badge (Bottom Right) -->
+  <g transform="translate(360, 360)">
+    <circle cx="36" cy="36" r="32" fill="#ffffff" filter="url(#dropShadow)" />
+    <circle cx="36" cy="36" r="26" fill="url(#mintGrad)" />
+    <!-- Checkmark icon -->
+    <path d="M 26 36 L 33 43 L 47 29" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>
