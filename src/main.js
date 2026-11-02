@@ -31,12 +31,7 @@ import {
   Database,
   ShieldCheck,
   BookOpen,
-  Clock,
-  Smartphone,
-  Download,
-  WifiOff,
-  History,
-  Server
+  Clock
 } from 'lucide';
 
 // Initialize Lucide icons with tree-shaken icons
@@ -73,12 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       Database,
       ShieldCheck,
       BookOpen,
-      Clock,
-      Smartphone,
-      Download,
-      WifiOff,
-      History,
-      Server
+      Clock
     }
   });
 
