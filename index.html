@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./pyreceipt-bot-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PyReceipt — Fast, Lightweight Receipt OCR & Telegram Expense Assistant</title>
-    <meta name="description" content="Autonomous expense tracking and lightweight OCR ingestion for Telegram & Terminal. Built with Python 3.12, Tesseract/RapidOCR, and SQLite." />
+    <title>PyReceipt — Receipt OCR & Expense Tracking, now an Android App</title>
+    <meta name="description" content="PyReceipt is now Receipt, an Android app that reads receipts with on-device RapidOCR and tracks expenses offline. The original Python OCR engine and Telegram assistant remain available." />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +15,16 @@
 
     <!-- Top Subtle Ambient Glow -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-blue-100/50 via-emerald-50/30 to-transparent blur-3xl pointer-events-none -z-10"></div>
+
+    <!-- Announcement Banner: Receipt Android App -->
+    <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer"
+       class="block w-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-blue-600 text-white text-xs sm:text-sm font-medium hover:brightness-110 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-center gap-2 text-center">
+        <i data-lucide="smartphone" class="w-4 h-4 shrink-0"></i>
+        <span><strong>New:</strong> PyReceipt is now an Android app. Meet <strong>Receipt</strong>: OCR and expense tracking in one app, fully offline.</span>
+        <i data-lucide="arrow-right" class="w-4 h-4 shrink-0"></i>
+      </div>
+    </a>
 
     <!-- Header Navigation -->
     <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-slate-200/80 transition-all">
@@ -38,7 +48,7 @@
             <span class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900">
               PyReceipt
             </span>
-            <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
+            <span class="hidden sm:inline-block lg:hidden xl:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
               Ecosystem
             </span>
           </div>
@@ -46,6 +56,7 @@
 
         <!-- Desktop Navigation Links (Hidden on < lg to prevent overflow) -->
         <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-slate-600 shrink-0">
+          <a href="#app" class="text-emerald-700 hover:text-emerald-600 font-semibold transition-colors whitespace-nowrap">Android App</a>
           <a href="#features" class="hover:text-blue-600 transition-colors whitespace-nowrap">Features</a>
           <a href="#how-it-works" class="hover:text-blue-600 transition-colors whitespace-nowrap">How It Works</a>
           <a href="#repos" class="hover:text-blue-600 transition-colors whitespace-nowrap">GitHub Repos</a>
@@ -55,16 +66,16 @@
         <!-- Header CTA Buttons (Responsive) -->
         <div class="hidden sm:flex items-center gap-2.5 shrink-0">
           <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition-all whitespace-nowrap">
+             class="inline-flex lg:hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition-all whitespace-nowrap">
             <i data-lucide="github" class="w-3.5 h-3.5"></i>
             <span>PyReceipt</span>
             <span class="text-[10px] font-mono text-slate-500 font-bold">v0.1.0</span>
           </a>
-          <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/30 hover:shadow-md hover:shadow-blue-600/40 transition-all whitespace-nowrap">
-            <i data-lucide="bot" class="w-3.5 h-3.5"></i>
-            <span>Chatbot</span>
-            <span class="text-[10px] font-mono bg-blue-500/90 text-white px-1.5 py-0.2 rounded font-bold">v0.1.0</span>
+          <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm shadow-emerald-600/30 hover:shadow-md hover:shadow-emerald-600/40 transition-all whitespace-nowrap">
+            <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+            <span>Get the App</span>
+            <span class="text-[10px] font-mono bg-emerald-500/90 text-white px-1.5 py-0.2 rounded font-bold">v0.1.0</span>
           </a>
         </div>
 
@@ -76,13 +87,15 @@
 
       <!-- Mobile Dropdown Menu -->
       <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-lg">
+        <a href="#app" class="block py-2 text-base font-semibold text-emerald-700 hover:text-emerald-600">Android App</a>
         <a href="#features" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">Features</a>
         <a href="#how-it-works" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">How It Works</a>
         <a href="#repos" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">GitHub Repos</a>
         <a href="#explore" class="block py-2 text-base font-medium text-slate-700 hover:text-blue-600">Technologies</a>
         <div class="pt-4 flex flex-col sm:hidden gap-2">
+          <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white">Get the Receipt App (v0.1.0)</a>
           <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-800">PyReceipt Repo (v0.1.0)</a>
-          <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-semibold bg-blue-600 text-white">PyReceiptChatbot Repo (v0.1.0)</a>
+          <a href="https://github.com/emanuelegaliano/PyReceiptChatbot" target="_blank" class="w-full text-center py-2.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-800">PyReceiptChatbot Repo (v0.1.0)</a>
         </div>
       </div>
     </header>
@@ -100,7 +113,7 @@
             <!-- Badge -->
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs sm:text-sm font-semibold mb-6 shadow-sm">
               <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Fast OCR & Autonomous Telegram Expense Assistant</span>
+              <span>Now an Android app: OCR and expense tracking on your phone</span>
             </div>
 
             <!-- Headline -->
@@ -114,15 +127,21 @@
 
             <!-- Sub-headline -->
             <p class="text-lg sm:text-xl text-slate-600 max-w-2xl font-normal leading-relaxed mb-10">
-              Leverage intelligent OCR (Tesseract & RapidOCR) and an autonomous Telegram chatbot to digitize, categorize, and query your expenses effortlessly.
+              PyReceipt started as a Python OCR engine (Tesseract & RapidOCR) paired with a Telegram chatbot. Today it lives on as <strong class="text-slate-800">Receipt</strong>, a single Android app that reads, categorizes and tracks your expenses entirely on your phone.
             </p>
 
             <!-- Primary CTA -->
-            <div class="flex items-center justify-center mb-16">
-              <a href="https://emanuelegaliano.github.io/PyReceiptChatbot/usage.html" target="_blank" rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:-translate-y-0.5 transition-all">
-                <span>Get Started</span>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
+              <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                <span>Get the Android App</span>
                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
+              </a>
+              <a href="https://emanuelegaliano.github.io/PyReceiptChatbot/usage.html" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-all">
+                <i data-lucide="bot" class="w-5 h-5 text-blue-600"></i>
+                <span>Python & Telegram version</span>
               </a>
             </div>
           </div>
@@ -328,6 +347,121 @@
       </section>
 
       <!-- ======================================================== -->
+      <!-- Android App Section: Receipt (successor of the ecosystem) -->
+      <!-- ======================================================== -->
+      <section id="app" class="py-20 bg-gradient-to-b from-emerald-50/70 to-white border-t border-emerald-200/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <!-- Section Header -->
+          <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-3 py-1 rounded-full">
+              New • Android App
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
+              PyReceipt Is Now <span class="text-emerald-600">Receipt</span> for Android
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600">
+              No more Telegram bot talking to an OCR model running somewhere else. The OCR pipeline and the PyReceipt parser have been ported to Dart and now run inside one app, on your phone, without an internet connection.
+            </p>
+          </div>
+
+          <!-- Before / After Comparison -->
+          <div class="grid grid-cols-1 lg:grid-cols-11 gap-6 items-stretch max-w-5xl mx-auto mb-12">
+
+            <!-- Before: PyReceipt ecosystem -->
+            <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 p-7 shadow-card">
+              <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i data-lucide="history" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-slate-900">Before: PyReceipt</h3>
+                    <p class="text-xs text-slate-500">Python OCR engine + Telegram bot</p>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 border border-slate-200">Original</span>
+              </div>
+              <ul class="space-y-3 text-sm text-slate-600">
+                <li class="flex items-start gap-3">
+                  <i data-lucide="server" class="w-4 h-4 text-slate-400 shrink-0 mt-0.5"></i>
+                  <span>OCR model running separately on a server or Raspberry Pi.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="bot" class="w-4 h-4 text-slate-400 shrink-0 mt-0.5"></i>
+                  <span>Receipts sent through a Telegram chatbot to be read.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="terminal" class="w-4 h-4 text-slate-400 shrink-0 mt-0.5"></i>
+                  <span>Commands like <code>/add</code> and <code>/stats</code> to manage expenses.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Arrow -->
+            <div class="lg:col-span-1 flex items-center justify-center">
+              <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-blue-600 to-emerald-500 text-white flex items-center justify-center shadow-md rotate-90 lg:rotate-0">
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+              </div>
+            </div>
+
+            <!-- Now: Receipt app -->
+            <div class="lg:col-span-5 bg-white rounded-3xl border-2 border-emerald-300 p-7 shadow-soft-md">
+              <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <i data-lucide="smartphone" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-slate-900">Now: Receipt</h3>
+                    <p class="text-xs text-slate-500">One Android app, all on-device</p>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">v0.1.0</span>
+              </div>
+              <ul class="space-y-3 text-sm text-slate-700">
+                <li class="flex items-start gap-3">
+                  <i data-lucide="scan-text" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>RapidOCR (PP-OCRv4) with ONNX Runtime directly on the phone, about 3 seconds per scan.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="wifi-off" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>No account, no cloud, no internet permission: data never leaves the device.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                  <span>Categories that learn, monthly limits, card vs cash summaries and .zip backups.</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- CTA Row -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-600/25 hover:-translate-y-0.5 transition-all">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              <span>Visit the Receipt website</span>
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+            <a href="https://github.com/emanuelegaliano/Receipt/releases/latest/download/receipt.apk" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Download APK</span>
+            </a>
+            <a href="https://github.com/emanuelegaliano/Receipt" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all">
+              <i data-lucide="github" class="w-4 h-4"></i>
+              <span>Receipt on GitHub</span>
+            </a>
+          </div>
+          <p class="text-center text-xs text-slate-500 mt-4">Android 7.0 or newer (arm64) • English and Italian • Not on the Play Store, install the APK from GitHub Releases.</p>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
       <!-- Features Section (Bento Grid) -->
       <!-- ======================================================== -->
       <section id="features" class="py-20 bg-slate-50/60 border-y border-slate-200/80">
@@ -336,13 +470,13 @@
           <!-- Section Header -->
           <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200/60 px-3 py-1 rounded-full">
-              Engine Capabilities
+              Original Engine Capabilities
             </span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
               Everything You Need to Track Receipts Effortlessly
             </h2>
             <p class="text-base sm:text-lg text-slate-600">
-              Designed as a lightweight, low-resource ecosystem: fast OCR parsing coupled with an autonomous Telegram bot and SQLite database.
+              The original Python ecosystem: fast OCR parsing coupled with an autonomous Telegram bot and SQLite database. Its parser is the heart of the <a href="#app" class="text-emerald-700 font-semibold hover:underline">Receipt Android app</a>.
             </p>
           </div>
 
@@ -549,10 +683,10 @@
               Live Showcase
             </span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 mb-4">
-              How PyReceipt Works in Action
+              How the Original PyReceipt Bot Works
             </h2>
             <p class="text-base sm:text-lg text-slate-600">
-              Explore the real Telegram interface, OCR pipeline, manual entry wizards, and statistical breakdown features.
+              Explore the real Telegram interface, OCR pipeline, manual entry wizards, and statistical breakdown features. Looking for the app? See <a href="https://emanuelegaliano.github.io/Receipt/#how-it-works" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-semibold hover:underline">Receipt in action</a>.
             </p>
           </div>
 
@@ -844,12 +978,44 @@
               Explore the PyReceipt Ecosystem
             </h2>
             <p class="text-base sm:text-lg text-slate-600">
-              Two modular repositories working in synergy to provide OCR extraction and conversational expense management.
+              The Receipt Android app, plus the two original repositories it grew out of: OCR extraction and conversational expense management.
             </p>
           </div>
 
+          <!-- Featured Repository: Receipt (Android App) -->
+          <div class="max-w-5xl mx-auto mb-8 bg-white rounded-3xl border-2 border-emerald-300 p-8 shadow-soft-md flex flex-col md:flex-row md:items-center justify-between gap-6 group">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                <i data-lucide="smartphone" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">Receipt</h3>
+                  <span class="text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">v0.1.0</span>
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-600 text-white">New</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-2">On-device receipt scanner & expense tracker for Android</p>
+                <p class="text-sm text-slate-600 leading-relaxed max-w-xl">
+                  Flutter app with RapidOCR on ONNX Runtime and the PyReceipt parser ported to Dart. Replaces the Telegram bot + separate OCR setup with one offline app.
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+              <a href="https://github.com/emanuelegaliano/Receipt" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                <span>Explore Receipt Repo</span>
+              </a>
+              <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all">
+                <span>App Website</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            
+
             <!-- Repository 1: PyReceipt -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft-lg hover:border-blue-300 transition-all flex flex-col justify-between group">
               <div>
@@ -1028,7 +1194,7 @@
               <span class="text-lg font-bold text-slate-900">PyReceipt</span>
             </div>
             <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
-              Lightweight receipt processing and autonomous Telegram expense assistant designed for privacy and low-resource environments.
+              Lightweight receipt processing and autonomous Telegram expense assistant designed for privacy and low-resource environments. Now available as the <a href="https://emanuelegaliano.github.io/Receipt/" target="_blank" rel="noopener noreferrer" class="font-semibold text-emerald-700 hover:underline">Receipt Android app</a>.
             </p>
             <div class="flex items-center gap-4 pt-1">
               <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" class="text-slate-400 hover:text-slate-900 transition-colors" title="GitHub Repository">
@@ -1045,6 +1211,7 @@
           <div>
             <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Navigation</h4>
             <ul class="space-y-2 text-xs">
+              <li><a href="#app" class="hover:text-emerald-600 transition-colors">Android App</a></li>
               <li><a href="#features" class="hover:text-blue-600 transition-colors">Features</a></li>
               <li><a href="#how-it-works" class="hover:text-blue-600 transition-colors">How It Works (Showcase)</a></li>
               <li><a href="#repos" class="hover:text-blue-600 transition-colors">GitHub Repositories</a></li>
@@ -1056,6 +1223,14 @@
           <div>
             <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Repositories & Versions</h4>
             <ul class="space-y-2 text-xs">
+              <li>
+                <a href="https://github.com/emanuelegaliano/Receipt" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-600 transition-colors inline-flex items-center gap-1 font-medium text-slate-700">
+                  <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span>Receipt (Android)</span>
+                  <span class="text-[10px] font-mono font-bold text-emerald-600">v0.1.0</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+                </a>
+              </li>
               <li>
                 <a href="https://github.com/emanuelegaliano/PyReceipt" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
                   <span>PyReceipt</span>
